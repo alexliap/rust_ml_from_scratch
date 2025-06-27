@@ -160,3 +160,4 @@ cython_debug/
 *.pkl
 *.ipynb
 data/
+*.txt
