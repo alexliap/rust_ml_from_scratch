@@ -6,3 +6,4 @@ resolver = "2"
 
 [dependencies]
 polars = { version = "*", features = ["csv", "ndarray"] }
+ndarray = "*"
