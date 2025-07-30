@@ -8,7 +8,7 @@ RANDOM_STATE = 0
 
 def make_simple_regression():
     x = np.array([i for i in range(100)])
-    y = 2 * x + 1
+    y = 2 * x + 10
 
     x_train, x_test, y_train, y_test = train_test_split(
         x.astype(np.int32), y.astype(np.int32), test_size=0.2, shuffle=False
