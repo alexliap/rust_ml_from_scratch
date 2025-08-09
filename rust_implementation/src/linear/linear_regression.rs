@@ -19,6 +19,7 @@ impl LinearRegression {
         y: &ndarray::ArrayBase<ndarray::OwnedRepr<i64>, ndarray::Dim<[usize; 2]>>,
         epochs: i32,
         lr: f32,
+        verbose: bool,
     ) {
         self._init_weights(x.shape()[1] as i32);
 
@@ -29,18 +30,20 @@ impl LinearRegression {
         for epoch in 1..=epochs {
             let grad = self._grad(x, y);
 
-            array_weights = array_weights - lr * grad;
+            array_weights = array_weights - lr * grad.clone();
 
             self.weights = array_weights.flatten().to_vec();
 
             let loss = self.loss(x, y);
 
-            print!(
-                "\nEpoch: {:?} | Loss: {:?} | Weights: {:?}\n",
-                epoch,
-                loss,
-                array_weights.flatten().to_vec()
-            )
+            if verbose {
+                print!(
+                    "\nEpoch: {:?} | Loss: {:?} | Weights: {:?}\n",
+                    epoch,
+                    loss,
+                    array_weights.flatten().to_vec(),
+                )
+            }
         }
     }
 
@@ -62,7 +65,14 @@ impl LinearRegression {
         let cast_x = x.mapv(|x| x as f32);
         let cast_y = y.mapv(|y| y as f32);
 
-        let grad = (1. / (x.shape()[0] as f32)) * cast_x.t().dot(&(curr_preds - cast_y));
+        let x_bias = Array::from_elem((cast_x.shape()[0], 1), 1.);
+
+        let x_data = concatenate![Axis(1), cast_x, x_bias];
+
+        let diff = &(curr_preds - cast_y);
+        let agg = x_data.t().dot(diff);
+
+        let grad = (1. / (x.shape()[0] as f32)) * agg;
 
         return grad;
     }
@@ -93,11 +103,7 @@ impl LinearRegression {
 
         let x_data = concatenate![Axis(1), cast_x, x_bias];
 
-        // print!("{x_data}");
-
         let preds = x_data.dot(&array_weights);
-
-        // print!("\n\n{preds}\n\n");
 
         return preds;
     }
@@ -127,5 +133,9 @@ impl LinearRegression {
             .unwrap();
 
         return (x, y);
+    }
+
+    pub fn get_weights(self) -> Vec<f32> {
+        return self.weights.clone();
     }
 }
