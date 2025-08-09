@@ -1,13 +1,16 @@
+import os
+
 import numpy as np
 import polars as pl
 from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
+from utils import make_results_path
 
 RANDOM_STATE = 0
 
 
 def make_simple_regression():
-    x = np.array([i for i in range(100)])
+    x = np.random.uniform(0, 100, 500)
     y = 2 * x + 10
 
     x_train, x_test, y_train, y_test = train_test_split(
@@ -18,18 +21,25 @@ def make_simple_regression():
 
     test = np.concat([x_test.reshape(-1, 1), y_test.reshape(-1, 1)], axis=1)
 
+    results_dir = make_results_path()
+    data_dir = os.path.join(results_dir, "data")
+    os.makedirs(data_dir, exist_ok=True)
+
+    train_path = os.path.join(data_dir, "simple_train.csv")
+    test_path = os.path.join(data_dir, "simple_test.csv")
+
     (
         pl.DataFrame(train)
         .rename(lambda column_name: "x_" + column_name[-1])
         .rename({"x_1": "y"})
-        .write_csv("data/simple_train.csv")
+        .write_csv(train_path)
     )
 
     (
         pl.DataFrame(test)
         .rename(lambda column_name: "x_" + column_name[-1])
         .rename({"x_1": "y"})
-        .write_csv("data/simple_test.csv")
+        .write_csv(test_path)
     )
 
 
@@ -54,18 +64,25 @@ def make_complex_regression():
 
     test = np.concat([x_test, y_test.reshape(-1, 1)], axis=1)
 
+    results_dir = make_results_path()
+    data_dir = os.path.join(results_dir, "data")
+    os.makedirs(data_dir, exist_ok=True)
+
+    train_path = os.path.join(data_dir, "complex_train.csv")
+    test_path = os.path.join(data_dir, "complex_test.csv")
+
     (
         pl.DataFrame(train)
         .rename(lambda column_name: "x_" + column_name[-1])
         .rename({"x_6": "y"})
-        .write_csv("data/complex_train.csv")
+        .write_csv(train_path)
     )
 
     (
         pl.DataFrame(test)
         .rename(lambda column_name: "x_" + column_name[-1])
         .rename({"x_6": "y"})
-        .write_csv("data/complex_test.csv")
+        .write_csv(test_path)
     )
 
 

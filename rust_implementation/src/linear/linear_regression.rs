@@ -135,7 +135,7 @@ impl LinearRegression {
         return (x, y);
     }
 
-    pub fn get_weights(self) -> Vec<f32> {
+    pub fn get_weights(&self) -> Vec<f32> {
         return self.weights.clone();
     }
 }
