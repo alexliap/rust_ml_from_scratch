@@ -31,7 +31,7 @@ Different datasets are generated for regression and classification. The data is 
 |           x6          |    62.968    | 61.159 |
 |          bias         |    -0.033    | -4.149 |
 
-| MSE Loss | scikit-learn |   Rust   |
-|:--------:|:------------:|:--------:|
-|  Simple  |     0.445    |   0.489  |
-|  Complex |     0.007    | 3815.698 |
+| Val MSE Loss | scikit-learn |   Rust   |
+|:------------:|:------------:|:--------:|
+|    Simple    |     0.445    |   0.489  |
+|    Complex   |     0.007    | 3815.698 |
